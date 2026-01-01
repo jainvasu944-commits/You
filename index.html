@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Special Surprise</title>
+
+<style>
+/* ... (Keep your original styles here) ... */
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    overflow: hidden; /* Keeps hearts inside */
+}
+
+/* Floating Heart Animation */
+.heart {
+    position: absolute;
+    color: rgba(255, 77, 109, 0.6);
+    pointer-events: none;
+    animation: float 3s linear forwards;
+}
+
+@keyframes float {
+    to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 25px;
+    width: 85%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 10;
+}
+
+.box.active { display: block; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Music Button Style */
+#music-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+<body onmousemove="createHeart(event)">
+
+<audio id="bdayMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-buddy.mp3" type="audio/mpeg">
+</audio>
+
+<button id="music-btn" onclick="toggleMusic()">🎵</button>
+
+<div class="box active" id="lock">
+    <h2>🔒 Private Surprise</h2>
+    <p>Enter the secret code</p>
+    <input type="password" id="pass" placeholder="Enter here..." onkeypress="handleEnter(event)">
+    <br>
+    <button onclick="unlock()">Unlock 🔑</button>
+</div>
+
+<div class="box" id="s1">
+    <h2>Hi Nistha 🌸</h2>
+    <p>I wanted to tell you that you're amazing!</p>
+    <button onclick="go('s2')">Next ➜</button>
+</div>
+
+<div class="box" id="s2">
+    <h2>🎂 Happy Birthday!</h2>
+    <p>May your year be as bright as your smile. ✨</p>
+    <div style="font-size: 40px;">🎁 🍰 🎈</div>
+    <button onclick="go('s3')">Final Message ➜</button>
+</div>
+
+<div class="box" id="s3">
+    <h2>🎉 Thank You</h2>
+    <p>For being you. Hope this made you smile! 🤍</p>
+    <button onclick="share()">🔗 Finish</button>
+</div>
+
+<div id="privacy" style="display:none; position:fixed; inset:0; background:white; align-items:center; justify-content:center; flex-direction:column;">
+    <h2>🤫 Keep it Safe</h2>
+    <p>This was just for you.</p>
+</div>
+
+<script>
+// Heart Trail Effect
+function createHeart(e) {
+    const heart = document.createElement("div");
+    heart.innerHTML = "❤️";
+    heart.className = "heart";
+    heart.style.left = e.pageX + "px";
+    heart.style.top = e.pageY + "px";
+    heart.style.fontSize = Math.random() * 20 + 10 + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+}
+
+function handleEnter(e) {
+    if(e.key === "Enter") unlock();
+}
+
+function unlock(){
+    if(document.getElementById("pass").value.toLowerCase() === "vasu"){
+        document.getElementById("lock").classList.remove("active");
+        document.getElementById("s1").classList.add("active");
+        // Start music on unlock (browsers usually require interaction first)
+        document.getElementById("bdayMusic").play();
+    } else {
+        alert("Try again! Hint: It's your name 🌸");
+    }
+}
+
+function toggleMusic() {
+    const music = document.getElementById("bdayMusic");
+    music.paused ? music.play() : music.pause();
+}
+
+function go(id){
+    document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+function share(){
+    document.querySelectorAll(".box").forEach(b=>b.classList.remove("active"));
+    document.getElementById("privacy").style.display="flex";
+}
+</script>
+
+</body>
+</html>
+
